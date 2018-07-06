@@ -2,10 +2,40 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/MapFragment">
+    app:startDestination="@id/CoachOverviewFragment">
     <fragment
         android:id="@+id/MapFragment"
         android:name="com.flycode.musclemax_app.ui.main.map.MapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" />
+
+    <fragment
+        android:id="@+id/CoachOverviewFragment"
+        android:name="com.flycode.musclemax_app.ui.main.coach.coachOverview.CoachOverviewFragment"
+        android:label="fragment_coach_overview"
+        tools:layout="@layout/fragment_coach_overview" />
+
+    <fragment
+        android:id="@+id/CoachViewFragment"
+        android:name="com.flycode.musclemax_app.ui.main.coach.coachView.CoachViewFragment"
+        android:label="fragment_coach_view"
+        tools:layout="@layout/fragment_coach_view" />
+
+    <fragment
+        android:id="@+id/GymsOverviewFragment"
+        android:name="com.flycode.musclemax_app.ui.main.gym.gymsOverview.GymsOverviewFragment"
+        android:label="fragment_gyms_overview"
+        tools:layout="@layout/fragment_gyms_overview" />
+
+    <fragment
+        android:id="@+id/UserProfileFragment"
+        android:name="com.flycode.musclemax_app.ui.main.userprofile.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
+
+    <fragment
+        android:id="@+id/TagsFragment"
+        android:name="com.flycode.musclemax_app.ui.main.tags.TagsFragment"
+        android:label="fragment_tags"
+        tools:layout="@layout/fragment_tags" />
 </navigation>

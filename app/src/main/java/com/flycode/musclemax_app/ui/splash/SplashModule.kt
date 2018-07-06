@@ -1,6 +1,7 @@
 package com.flycode.musclemax_app.ui.splash
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
 
@@ -8,8 +9,12 @@ import dagger.Provides
 class SplashModule{
 
     @Provides
-    fun providePresenter(): SplashPresenter{
-        return SplashPresenter()
+    fun providePresenter(
+            sharedPreferences: SharedPreferences
+    ): SplashPresenter{
+        return SplashPresenter(
+                sharedPreferences = sharedPreferences
+        )
     }
 
     @Provides

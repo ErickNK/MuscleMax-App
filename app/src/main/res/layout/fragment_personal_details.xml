@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data class="PersonalDetailsBinding">
+        <import type="android.view.View"/>
+        <variable
+            name="superViewModel"
+            type="com.flycode.musclemax_app.ui.auth.signup.SignUpViewModel"/>
+
+    </data>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/bg_dark"
+            android:padding="@dimen/app_init_padding"
+            tools:context=".ui.auth.signup.PersonalDetails.PersonalDetailsFragment">
+
+            <!--TITLE-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/personal_details_heading"
+                android:textSize="@dimen/app_init_headings"
+                android:textColor="@color/app_init_titles"
+                android:layout_gravity="start"
+                android:paddingBottom="20dp"/>
+
+            <TextView
+                android:id="@+id/google_sign_in_success_more_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/google_sign_in_success_more_info"
+                android:padding="10dp"
+                android:textColor="@color/colorWhite"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:visibility="@{superViewModel.uiState.googleLoginSuccess ? View.VISIBLE : View.GONE}"
+                android:background="@color/colorLtGreen"/>
+
+            <TextView
+                android:id="@+id/facebook_sign_in_success_more_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/facebook_sign_in_success_more_info"
+                android:padding="10dp"
+                android:textColor="@color/colorWhite"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:visibility="@{superViewModel.uiState.facebookLoginSuccess ? View.VISIBLE : View.GONE}"
+                android:background="@color/colorLtGreen"/>
+
+            <!--PERSONAL DETAILS-->
+            <!--SUBTITLE-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_pic"
+                android:textSize="@dimen/app_init_subheadings"
+                android:textColor="@color/app_init_titles"
+                android:layout_gravity="start"/>
+            <View
+                android:layout_width="100dp"
+                android:layout_height="1dp"
+                android:background="@color/app_init_lightGray_txt"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="@dimen/app_init_padding"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="20dp">
+                <FrameLayout
+                    android:id="@+id/profile_pic_frame"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_pic"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/image_placeholder"
+                        android:contentDescription="@string/profile_pic" />
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/fab_add_profile_pic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|bottom"
+                        app:backgroundTint="@color/colorGreen"
+                        app:borderWidth="0dp"
+                        app:elevation="6dp"
+                        app:fabSize="normal"
+                        app:srcCompat="@drawable/ic_edit_white_24dp" />
+
+                    <ProgressBar
+                        android:id="@+id/profile_pic_progress_bar"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:visibility="gone" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!--PERSONAL DETAILS-->
+            <!--SUBTITLE-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/personal_details_subtitle"
+                android:textSize="@dimen/app_init_subheadings"
+                android:textColor="@color/app_init_titles"
+                android:layout_gravity="start"/>
+            <View
+                android:layout_width="100dp"
+                android:layout_height="1dp"
+                android:background="@color/app_init_lightGray_txt"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="@dimen/app_init_padding"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!--FULL NAME INPUT-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@string/fullname_txt"
+                        android:src="@drawable/ic_name_tag" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="10dp"
+                            android:orientation="vertical">
+
+                            <!--TODO: show EditText hint when user begins to write-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start"
+                                android:text="@string/first_name"
+                                android:textColor="@color/Primary"
+                                android:textSize="@dimen/app_init_fieldHintTitles"
+                                android:visibility="@{superViewModel.user.firstname.empty ? View.GONE : View.VISIBLE}"/>
+
+                            <EditText
+                                android:id="@+id/txt_full_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/app_init_normal_input_height"
+                                android:inputType="text"
+                                android:hint="@string/first_name"
+                                android:text="@={superViewModel.user.firstname}"
+                                android:textColor="@color/app_init_input_txt"
+                                android:textColorHint="@color/app_init_lightGray_txt"
+                                android:textSize="@dimen/app_init_text"
+                                android:background="@drawable/app_init_inputfields"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <!--TODO: show EditText hint when user begins to write-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start"
+                                android:text="@string/lastname"
+                                android:textColor="@color/Primary"
+                                android:textSize="@dimen/app_init_fieldHintTitles"
+                                android:visibility="@{superViewModel.user.lastname.empty ? View.GONE : View.VISIBLE}"/>
+
+                            <EditText
+                                android:id="@+id/tv_second_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/app_init_normal_input_height"
+                                android:inputType="text"
+                                android:hint="@string/lastname"
+                                android:text="@={superViewModel.user.lastname}"
+                                android:textColor="@color/app_init_input_txt"
+                                android:textColorHint="@color/app_init_lightGray_txt"
+                                android:textSize="@dimen/app_init_text"
+                                android:background="@drawable/app_init_inputfields"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!--EMAIL INPUT-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@string/your_email"
+                        android:src="@drawable/ic_email_white_24dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:text="@string/Email"
+                            android:textColor="@color/Primary"
+                            android:textSize="@dimen/app_init_fieldHintTitles"
+                            android:visibility="@{superViewModel.user.email.empty ? View.GONE : View.VISIBLE}"/>
+
+                        <EditText
+                            android:id="@+id/tv_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/app_init_normal_input_height"
+                            android:background="@drawable/app_init_inputfields"
+                            android:hint="@string/Email"
+                            android:inputType="textEmailAddress"
+                            android:text="@={superViewModel.user.email}"
+                            android:textColor="@color/app_init_titles"
+                            android:textColorHint="@color/app_init_lightGray_txt"
+                            android:textSize="@dimen/app_init_text" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!--PASSWORD INPUT-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@string/Age_txt"
+                        android:src="@drawable/ic_security_white_24dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start"
+                                android:text="@string/Password"
+                                android:textColor="@color/Primary"
+                                android:textSize="@dimen/app_init_fieldHintTitles"
+                                android:visibility="@{superViewModel.user.password.empty ? View.GONE : View.VISIBLE}"/>
+
+                            <EditText
+                                android:id="@+id/tv_password"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/app_init_normal_input_height"
+                                android:background="@drawable/app_init_inputfields"
+                                android:hint="@string/Password"
+                                android:inputType="textPassword"
+                                android:text="@={superViewModel.user.password}"
+                                android:textColor="@color/app_init_titles"
+                                android:textColorHint="@color/app_init_lightGray_txt"
+                                android:textSize="@dimen/app_init_text" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start"
+                                android:text="@string/Re_type_password"
+                                android:textColor="@color/Primary"
+                                android:textSize="@dimen/app_init_fieldHintTitles"
+                                android:visibility="@{superViewModel.user.password.empty ? View.GONE : View.VISIBLE}"/>
+
+                            <EditText
+                                android:id="@+id/tv_password_retype"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/app_init_normal_input_height"
+                                android:background="@drawable/app_init_inputfields"
+                                android:hint="@string/Re_type_password"
+                                android:inputType="textPassword"
+                                android:textColor="@color/app_init_titles"
+                                android:textColorHint="@color/app_init_lightGray_txt"
+                                android:textSize="@dimen/app_init_text" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!--TEL INPUT-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@string/your_email"
+                        android:src="@drawable/ic_phone_white_24dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:text="@string/Tel"
+                            android:textColor="@color/Primary"
+                            android:textSize="@dimen/app_init_fieldHintTitles"
+                            android:visibility="@{superViewModel.user.tel.empty ? View.GONE : View.VISIBLE}"/>
+
+                        <EditText
+                            android:id="@+id/tv_tel"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/app_init_normal_input_height"
+                            android:background="@drawable/app_init_inputfields"
+                            android:hint="@string/Tel"
+                            android:inputType="textEmailAddress"
+                            android:text="@={superViewModel.user.tel}"
+                            android:textColor="@color/app_init_titles"
+                            android:textColorHint="@color/app_init_lightGray_txt"
+                            android:textSize="@dimen/app_init_text" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!--DATE INPUT-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@string/Age_txt"
+                        android:src="@drawable/ic_calendar" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:text="@string/Age_txt"
+                            android:textColor="@color/Primary"
+                            android:textSize="@dimen/app_init_fieldHintTitles"
+                            android:visibility="@{superViewModel.user.age == 0 ? View.GONE : View.VISIBLE}"/>
+
+                        <EditText
+                            android:id="@+id/tv_age"
+                            android:layout_width="100dp"
+                            android:layout_height="@dimen/app_init_normal_input_height"
+                            android:background="@drawable/app_init_inputfields"
+                            android:hint="@string/Age_txt"
+                            android:inputType="text"
+                            android:text="@={superViewModel.user.age}"
+                            android:textColor="@color/app_init_titles"
+                            android:textColorHint="@color/app_init_lightGray_txt"
+                            android:textSize="@dimen/app_init_text" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!--GENDER INPUT-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@string/Age_txt"
+                        android:src="@drawable/ic_gender" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:text="@string/gender_txt"
+                            android:textColor="@color/Primary"
+                            android:textSize="@dimen/app_init_fieldHintTitles"
+                            android:visibility="visible"/>
+
+                        <RadioGroup
+                            android:id="@+id/gender_radio_group"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            app:gender="@={superViewModel.user.gender}">
+
+                            <RadioButton
+                                android:id="@+id/male_radio_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:buttonTint="@color/app_init_text"
+                                android:textColor="@color/app_init_text"
+                                android:text="@string/male"/>
+
+                            <RadioButton
+                                android:id="@+id/female_radio_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:buttonTint="@color/app_init_text"
+                                android:textColor="@color/app_init_text"
+                                android:text="@string/female"/>
+                        </RadioGroup>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--NAV-->
+            <LinearLayout
+                android:id="@+id/layout_nav"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp">
+
+                <Button
+                    android:id="@+id/btn_prev"
+                    android:layout_width="@dimen/viewPager_btn_dimen"
+                    android:layout_height="@dimen/viewPager_btn_dimen"
+                    android:layout_gravity="bottom|start"
+                    android:background="@drawable/viewpager_prev_btn"
+                    android:visibility="invisible"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/btn_middle"
+                        android:layout_width="120dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/primary_btn"
+                        android:text="@string/btn_add_later"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:visibility="invisible" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_next"
+                    android:layout_width="@dimen/viewPager_btn_dimen"
+                    android:layout_height="@dimen/viewPager_btn_dimen"
+                    android:layout_gravity="bottom|end"
+                    android:background="@drawable/viewpager_next_btn" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</layout>
+

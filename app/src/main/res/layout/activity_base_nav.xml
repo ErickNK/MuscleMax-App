@@ -3,21 +3,62 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data class="BaseActivityBinding"/>
+    <data class="BaseActivityBinding">
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.flycode.musclemax_app.ui.main.MainViewModel"/>
+    </data>
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/base_drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.main.MainActivity">
 
-        <!--CONTENT-->
-        <fragment
-            android:id="@+id/base_nav_fragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/main_navigation" />
+            android:layout_height="match_parent">
+            <!--CONTENT-->
+            <fragment
+                android:id="@+id/base_nav_fragment"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:defaultNavHost="true"
+                app:navGraph="@navigation/main_navigation" />
+
+            <FrameLayout
+                android:id="@+id/main_loading_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorTranslucentWhite"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:visibility="@{viewModel.uiState.isLoading? View.VISIBLE : View.GONE}">
+                <ProgressBar
+                    android:id="@+id/main_progress_bar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/main_reload_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorTranslucentWhite"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:visibility="@{viewModel.uiState.onError? View.VISIBLE : View.GONE}">
+                <ImageButton
+                    android:id="@+id/main_reload_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_refresh_white_24dp"
+                    android:background="@drawable/circle_btn_primary"
+                    android:elevation="3dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/retry" />
+            </FrameLayout>
+        </FrameLayout>
 
         <!--DRAWER-->
         <android.support.design.widget.NavigationView

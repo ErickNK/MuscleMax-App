@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data class="SignInBinding">
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.flycode.musclemax_app.ui.auth.signin.SignInViewModel"/>
@@ -11,58 +12,132 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/bg_dark"
         tools:context=".ui.auth.signin.SignInFragment">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_gravity="bottom"
+            android:layout_margin="20dp"
             android:orientation="vertical">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginBottom="50dp">
 
-
-                <EditText
-                    android:id="@+id/tv_email"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="20dp"
-                    android:hint="@string/email"
-                    android:text="@={viewModel.credentials.email}"
-                    android:inputType="textEmailAddress"
-                    android:padding="10dp"
-                    android:textSize="20sp" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/tv_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="20dp"
-                    android:hint="@string/password"
-                    android:text="@={viewModel.credentials.password}"
-                    android:inputType="textPassword"
-                    android:padding="10dp"
-                    android:textSize="20sp" />
+                    <!--EMAIL INPUT-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="20dp">
 
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="20dp"
+                            android:contentDescription="@string/your_email"
+                            android:src="@drawable/ic_email_white_24dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start"
+                                android:text="@string/Email"
+                                android:textColor="@color/Primary"
+                                android:textSize="@dimen/app_init_fieldHintTitles"
+                                android:visibility="@{viewModel.credentials.email.empty ? View.GONE : View.VISIBLE}"/>
+
+                            <EditText
+                                android:id="@+id/tv_email"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/app_init_normal_input_height"
+                                android:background="@drawable/app_init_inputfields"
+                                android:hint="@string/Email"
+                                android:inputType="textEmailAddress"
+                                android:text="@={viewModel.credentials.email}"
+                                android:textColor="@color/app_init_titles"
+                                android:textColorHint="@color/app_init_lightGray_txt"
+                                android:textSize="@dimen/app_init_text" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!--PASSWORD INPUT-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="20dp">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="20dp"
+                            android:contentDescription="@string/your_email"
+                            android:src="@drawable/ic_security_white_24dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start"
+                                android:text="@string/Password"
+                                android:textColor="@color/Primary"
+                                android:textSize="@dimen/app_init_fieldHintTitles"
+                                android:visibility="@{viewModel.credentials.password.empty ? View.GONE : View.VISIBLE}"/>
+
+                            <EditText
+                                android:id="@+id/tv_password"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/app_init_normal_input_height"
+                                android:background="@drawable/app_init_inputfields"
+                                android:hint="@string/Password"
+                                android:inputType="textPassword"
+                                android:text="@={viewModel.credentials.password}"
+                                android:textColor="@color/app_init_titles"
+                                android:textColorHint="@color/app_init_lightGray_txt"
+                                android:textSize="@dimen/app_init_text" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <Button
+
+                    android:id="@+id/sign_in_btn"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="20dp"
+                    android:clickable="true"
+                    android:text="@string/btn_login"
+                    android:textColor="@color/colorWhite"
+                    android:background="@drawable/primary_btn"
+                    android:textSize="20sp" />
             </LinearLayout>
-
-            <Button
-                android:id="@+id/sign_in_btn"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="20dp"
-                android:clickable="true"
-                android:text="@string/btn_login"
-                android:textColor="@color/colorBlack"
-                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -75,7 +150,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginBottom="0dp"
                     android:text="@string/signup_message"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="@color/colorWhite"
                     android:textSize="18sp" />
 
                 <TextView
@@ -85,7 +160,7 @@
                     android:layout_marginBottom="0dp"
                     android:paddingLeft="10dp"
                     android:text="@string/sign_up_text_btn"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="@color/colorWhite"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 

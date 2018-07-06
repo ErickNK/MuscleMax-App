@@ -1,0 +1,104 @@
+mutation login($email: String!, $password: String!){
+    login(email: $email,password: $password){
+        token
+        user{
+            id
+            type
+            firstname
+            lastname
+            gender
+            age
+            email
+            tel
+        }
+    }
+}
+
+mutation registerUser($user: User_Input!, $password: String){
+    user(method: ADD,user: $user,password: $password){
+        id
+    }
+}
+
+mutation registerUserWithPictures(
+    $user: User_Input!,
+    $password: String,
+    $pictures: [Picture_Input!]
+){
+    user(
+        method: ADD,
+        user: $user,
+        password: $password,
+        pictures: $pictures
+    ){
+        id
+        type
+        firstname
+        lastname
+        gender
+        age
+        email
+        tel
+        pictures{
+            id
+            name
+            type
+            size
+            remote_location
+            description
+            picturable_id
+            picturable_type
+        }
+    }
+}
+
+mutation registerUserFull(
+    $user: User_Input!,
+    $password: String,
+    $pictures: [Picture_Input!],
+    $location: Location_Input
+    $weight_measurement: Weight_Measurement_Input
+){
+    user(
+        method: ADD,
+        user: $user,
+        password: $password,
+        pictures: $pictures,
+        location: $location,
+        weight_measurement: $weight_measurement,
+    ){
+        id
+        type
+        firstname
+        lastname
+        gender
+        age
+        email
+        tel
+        pictures{
+            id
+            name
+            type
+            size
+            remote_location
+            description
+            picturable_id
+            picturable_type
+        }
+        location{
+            id
+            address
+            latLng
+            locatable_id
+            locatable_type
+        }
+        weight_measurements{
+            owner_id
+            weight
+            height
+            bmi
+            type
+            created_at
+        }
+    }
+}

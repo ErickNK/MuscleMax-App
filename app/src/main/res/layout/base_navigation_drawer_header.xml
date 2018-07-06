@@ -2,39 +2,38 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data class="BaseNavDrawerHeadingBindings"/>
-    <RelativeLayout
+    <data class="BaseNavDrawerHeadingBindings">
+        <variable
+            name="viewModel"
+            type="com.flycode.musclemax_app.ui.main.MainViewModel"/>
+    </data>
+    <LinearLayout
         android:id="@+id/main_view"
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:orientation="vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingBottom="10dp"
+        android:gravity="center"
         android:background="@drawable/material_wallpaper">
 
-        <!--<de.hdodenhof.circleimageview.CircleImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
             android:layout_width="67dp"
             android:layout_height="78dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
-            android:layout_above="@+id/tv_full_name"
-            android:layout_alignParentStart="true"
-            android:src="@{user.Gender.get() == `Male`? @drawable/ic_male_player : @drawable/ic_female_player}"
+            android:src="@drawable/image_placeholder"
             app:civ_border_color="#ffffff"
             app:civ_border_width="2dp"
-            app:civ_circle_background_color="@color/colorWhite/white" />-->
+            app:civ_circle_background_color="@color/colorWhite" />
 
         <TextView
             android:id="@+id/tv_full_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:text="@string/user"
+            android:layout_marginBottom="5dp"
+            android:text="@{viewModel.defaultUser.firstname +` `+  viewModel.defaultUser.lastname}"
             android:textStyle="bold"
             android:textColor="@color/colorWhite"
             android:textSize="15sp" />
-
-    </RelativeLayout>
+    </LinearLayout>
 </layout>

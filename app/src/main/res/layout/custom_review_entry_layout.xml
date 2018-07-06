@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data class="CustomReviewEntryBinding">
+        <variable
+            name="review"
+            type="com.flycode.musclemax_app.data.models.Review"/>
+    </data>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
+            <!--SUBTITLES-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_a_review"
+                android:textSize="@dimen/app_init_subheadings"
+                android:textColor="@color/colorWhite"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="start"/>
+
+            <!--REVIEW INPUT-->
+            <EditText
+                android:id="@+id/ed_tag_name"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:inputType="textMultiLine"
+                android:text="@={review.content}"
+                android:textSize="@dimen/app_init_text"
+                android:textColor="@color/colorDarkGray"
+                android:background="@drawable/light_gray_inputfields"/>
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
