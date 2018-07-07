@@ -48,6 +48,7 @@ class CoachViewFragment
     lateinit var customReviewEntryDialog: MaterialDialog
 
     lateinit var CoachViewBinding: CoachViewBinding
+    val CALL_PHONE_PERMISSION_REQUEST_CODE: Int = 4
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -93,6 +94,13 @@ class CoachViewFragment
         setupTagsRecyclerView()
         setupTagsEntry()
         setupReviewsEntry()
+    }
+
+    override fun onPermissionsGranted(requestCode: Int) {
+        super.onPermissionsGranted(requestCode)
+        if (requestCode == CALL_PHONE_PERMISSION_REQUEST_CODE){
+            presenter.onCallPermissionsGranted()
+        }
     }
 
     private fun setupTagsRecyclerView() {

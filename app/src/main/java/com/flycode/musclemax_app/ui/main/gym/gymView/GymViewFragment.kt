@@ -43,6 +43,7 @@ class GymViewFragment : BaseFragment<GymViewFragment, GymViewPresenter, GymViewV
     lateinit var customReviewEntryDialog: MaterialDialog
 
     lateinit var gymViewBinding: GymViewBinding
+    val CALL_PHONE_PERMISSION_REQUEST_CODE: Int = 4
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -240,6 +241,13 @@ class GymViewFragment : BaseFragment<GymViewFragment, GymViewPresenter, GymViewV
             viewModel.uiState.isOtherDetailsHidden = false
         }
 
+    }
+
+    override fun onPermissionsGranted(requestCode: Int) {
+        super.onPermissionsGranted(requestCode)
+        if (requestCode == CALL_PHONE_PERMISSION_REQUEST_CODE){
+            presenter.onCallPermissionsGranted()
+        }
     }
 
     fun onGymClicked(gym: Gym) {

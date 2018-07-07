@@ -2,10 +2,7 @@ package com.flycode.musclemax_app.ui.main.coach.coachView
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.support.v4.app.ActivityCompat
-import android.widget.Toast
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.ApolloQueryCall
 import com.apollographql.apollo.rx2.Rx2Apollo
@@ -80,19 +77,23 @@ class CoachViewPresenter(
         }
     }
 
+    fun onCallPermissionsGranted(){
+        view?.let {view ->
+            //Creating intents for making a call
+            val callIntent = Intent(Intent.ACTION_CALL)
+            callIntent.data = Uri.parse("tel:${viewModel.coach.tel}")
+            view.startActivity(callIntent)
+
+        }
+    }
+
     fun callCoach() {
         view?.let {view ->
-            //TODO: save the country telephone code together with the national number of the user
-            if (ActivityCompat.checkSelfPermission(view.context!!,
-                            Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                //Creating intents for making a call
-                val callIntent = Intent(Intent.ACTION_CALL)
-                callIntent.data = Uri.parse("tel:${viewModel.coach.tel}")
-                view.startActivity(callIntent)
-
-            } else {
-                Toast.makeText(view.context!!, "We don't have permission.", Toast.LENGTH_SHORT).show()
-            }
+            view.requestAppPermissions(
+                    arrayOf(
+                            Manifest.permission.CALL_PHONE
+                    ),
+                    R.string.we_need_permission_to_function, view.CALL_PHONE_PERMISSION_REQUEST_CODE)
         }
     }
 

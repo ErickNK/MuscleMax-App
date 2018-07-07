@@ -3,8 +3,8 @@ package com.flycode.musclemax_app.data
 class Config {
     companion object {
 //        const val BACKEND_ENDPOINT : String = "https://musclemax.herokuapp.com/api/"
-        const val GRAPHQL_ENDPOINT : String = "http://192.168.0.20/graphql"
-        const val BACKEND_ENDPOINT : String = "http://192.168.0.20/"
+        const val GRAPHQL_ENDPOINT : String = "https://musclemax.herokuapp.com/graphql"
+        const val BACKEND_ENDPOINT : String = "https://musclemax.herokuapp.com/"
         const val GOOGLE_API_KEY : String = "AIzaSyD458Z2Fwp-12XLm67NvrR5-Z80ZSy6cKw"
         const val GOOGLE_SERVER_CLIENT_ID : String = "790578361540-vg6mos53m2kbv9p3arbsgifs7f36haap.apps.googleusercontent.com"
 

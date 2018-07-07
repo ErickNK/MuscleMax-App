@@ -3,13 +3,11 @@ package com.flycode.musclemax_app.ui.main.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.NonNull
 import android.support.design.widget.CoordinatorLayout
-import android.support.v4.app.ActivityCompat
 import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -62,6 +60,7 @@ class MapFragment
         OnMapReadyCallback, BaseServiceContract.ServiceListener, GymListItem.GymListItemListener {
 
     private val PERMISSION_REQUEST_CODE = 0
+    private val GOOGLE_SERVICES_ERROR_REQUEST_CODE = 1
     lateinit var mapFragmentBinding: MapFragmentBinding
     private lateinit var map: GoogleMap
     @Inject override lateinit var viewModel: MapViewModel
@@ -71,7 +70,6 @@ class MapFragment
     lateinit var behavior: GoogleMapsBottomSheetBehavior<NestedScrollView>
     @Inject lateinit var searchListAdapter: FlexibleAdapter<SearchResultsHeaderItem>
     var bottomSheetStateListener: BottomSheetStateListener? = null
-
     lateinit var customDistanceEntryBinging: CustomDistanceEntryBinging
     lateinit var customDistanceEntryDialog: MaterialDialog
 
@@ -101,10 +99,10 @@ class MapFragment
         (activity as AppCompatActivity).setSupportActionBar(mapFragmentBinding.toolbar as Toolbar)
 
         // GOOGLE MAPS
-        checkLocationPermissions()
-        isGooglePlayServicesAvailable()
-        val mapFragment = childFragmentManager.findFragmentById(R.id.main_map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        if(isGooglePlayServicesAvailable()) {
+            checkLocationPermissions()
+        }
+
 
         mapFragmentBinding.toolbar.findViewById<EditText>(R.id.ed_search).addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int,
@@ -363,9 +361,15 @@ class MapFragment
         }
     }
 
+    private fun mapsInit(){
+        val mapFragment = childFragmentManager.findFragmentById(R.id.main_map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
+
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        isWaitingForMap = false
         map.setOnMapClickListener {
             behavior.isHideable = true
             behavior.state = GoogleMapsBottomSheetBehavior.STATE_HIDDEN
@@ -392,25 +396,28 @@ class MapFragment
 
     }
 
+
+    private var isWaitingForMap: Boolean = true
+
+    override fun onPermissionsGranted(requestCode: Int) {
+        super.onPermissionsGranted(requestCode)
+        permissionsGranted = true
+        isWaitingForMap = true
+        mapsInit()
+    }
+
     /**
      * Check if the application has been granted access to the camera.
      * If not hide the progress image card view and try requesting for it.
      *
      */
     private fun checkLocationPermissions() {
-        context?.let {
-            if ( ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(it, Manifest.permission.INTERNET)
-                    != PackageManager.PERMISSION_GRANTED) {
-                activity?.let { it1 ->
-                    ActivityCompat.requestPermissions(it1,
-                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET),
-                            PERMISSION_REQUEST_CODE)
-                }
-            } else
-                permissionsGranted = true
-        }
+        requestAppPermissions(
+                arrayOf(
+                        Manifest.permission.INTERNET,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                ),
+                R.string.we_need_permission_to_function, PERMISSION_REQUEST_CODE)
     }
 
     /**
@@ -419,36 +426,42 @@ class MapFragment
     private fun isGooglePlayServicesAvailable(): Boolean {
         val googleAPI = GoogleApiAvailability.getInstance()
         val result = googleAPI.isGooglePlayServicesAvailable(context)
-        if (result != ConnectionResult.SUCCESS) {
+        return if (result != ConnectionResult.SUCCESS) {
             if (googleAPI.isUserResolvableError(result)) {
-                googleAPI.getErrorDialog(activity, result, 0).show()
+                googleAPI.getErrorDialog(activity, result, GOOGLE_SERVICES_ERROR_REQUEST_CODE).show()
+                false
+            } else{
+                showError(getString(R.string.google_services_error))
+                false
             }
-            return false
-        }
-        return true
+        }else true
     }
 
     fun centerOnUser(latLng: LatLng){
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f))
-        map.addCircle(
-                CircleOptions()
-                        .center(latLng)
-                        .radius(viewModel.uiState.nearbyDistance * 1000.0)
-                        .strokeWidth(1f)
-                        .strokeColor(resources.getColor(R.color.colorPrimary))
-                        .fillColor(resources.getColor(R.color.translucentColorPrimary))
-        )
+        if (!isWaitingForMap){
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f))
+            map.addCircle(
+                    CircleOptions()
+                            .center(latLng)
+                            .radius(viewModel.uiState.nearbyDistance * 1000.0)
+                            .strokeWidth(1f)
+                            .strokeColor(resources.getColor(R.color.colorPrimary))
+                            .fillColor(resources.getColor(R.color.translucentColorPrimary))
+            )
+        }
     }
 
     fun moveCamera(latLng: LatLng, zoom: Float, mark: Boolean = false, markerTitle: String = ""){
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom))
-        if (mark) {
-            map.addMarker(
-                    MarkerOptions()
-                            .title(markerTitle)
-                            .snippet("lat:${latLng.latitude}, lng:${latLng.longitude}")
-                            .position(latLng)
-            )
+        if (!isWaitingForMap) {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
+            if (mark) {
+                map.addMarker(
+                        MarkerOptions()
+                                .title(markerTitle)
+                                .snippet("lat:${latLng.latitude}, lng:${latLng.longitude}")
+                                .position(latLng)
+                )
+            }
         }
     }
 

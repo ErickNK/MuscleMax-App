@@ -3,12 +3,9 @@ package com.flycode.musclemax_app.ui.auth.signup.LocationDetails
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
-import android.support.annotation.NonNull
-import android.support.v4.app.ActivityCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -122,6 +119,7 @@ class LocationDetailsFragment
         map = googleMap
         map.isMyLocationEnabled = true
         map.uiSettings.isMyLocationButtonEnabled = false
+        isWaitingForMap = false
 
         gpsTracker.lastKnownLocation?.let {
             moveCamera(it,13f)
@@ -151,15 +149,17 @@ class LocationDetailsFragment
     }
 
     fun moveCamera(latLng: LatLng,zoom: Float,mark: Boolean = false,markerTitle: String = ""){
-        map.clear()
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom))
-        if (mark)
-            map.addMarker(
-                    MarkerOptions()
-                    .title(markerTitle)
-                    .snippet("lat:${latLng.latitude}, lng:${latLng.longitude}")
-                    .position(latLng)
-            )
+        if (!isWaitingForMap){
+            map.clear()
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom))
+            if (mark)
+                map.addMarker(
+                        MarkerOptions()
+                                .title(markerTitle)
+                                .snippet("lat:${latLng.latitude}, lng:${latLng.longitude}")
+                                .position(latLng)
+                )
+        }
     }
 
     private fun mapsInit(){
@@ -175,17 +175,13 @@ class LocationDetailsFragment
         showError(message)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, @NonNull permissions: Array<String>,
-                                            @NonNull grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty()
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                locationPermissionsGranted = true
-                mapsInit()
-            }
-        }
+    private var isWaitingForMap: Boolean = true
+
+    override fun onPermissionsGranted(requestCode: Int) {
+        super.onPermissionsGranted(requestCode)
+        locationPermissionsGranted = true
+        isWaitingForMap = true
+        mapsInit()
     }
 
     private fun hideSoftKeyboard(){
@@ -204,28 +200,19 @@ class LocationDetailsFragment
         }
 
     }
+
     /**
      * Check if the application has been granted access to the camera.
      * If not hide the progress image card view and try requesting for it.
      *
      */
     private fun checkLocationPermissions() {
-        context?.let {
-            if ( ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(it, Manifest.permission.INTERNET)
-                    != PackageManager.PERMISSION_GRANTED) {
-                activity?.let { it1 ->
-                    ActivityCompat.requestPermissions(it1,
-                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET),
-                            PERMISSION_REQUEST_CODE)
-                }
-            } else {
-                locationPermissionsGranted = true
-                mapsInit()
-            }
-
-        }
+        requestAppPermissions(
+                arrayOf(
+                        Manifest.permission.INTERNET,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                ),
+                R.string.we_need_permission_to_function, PERMISSION_REQUEST_CODE)
     }
 
     /**
@@ -234,12 +221,14 @@ class LocationDetailsFragment
     private fun isGooglePlayServicesAvailable(): Boolean {
         val googleAPI = GoogleApiAvailability.getInstance()
         val result = googleAPI.isGooglePlayServicesAvailable(context)
-        if (result != ConnectionResult.SUCCESS) {
+        return if (result != ConnectionResult.SUCCESS) {
             if (googleAPI.isUserResolvableError(result)) {
                 googleAPI.getErrorDialog(activity, result, GOOGLE_SERVICES_ERROR_REQUEST_CODE).show()
+                false
+            } else {
+                showError(getString(R.string.google_services_error))
+                false
             }
-            else showError(getString(R.string.google_services_error))
-        }
-        return true
+        }else true
     }
 }

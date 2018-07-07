@@ -142,4 +142,7 @@
     <string name="user_profile_navigation_item">Your Profile</string>
     <string name="action_search">Search</string>
     <string name="search_distance">Search distance:</string>
+    <string name="we_dont_have_permission">We don\'t have permission</string>
+    <string name="we_need_permission_to_function">In order continue, please grant us the required permissions</string>
+    <string name="permissions_granted">Permissions granted</string>
 </resources>
