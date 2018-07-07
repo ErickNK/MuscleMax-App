@@ -1,27 +1,30 @@
 package com.flycode.musclemax_app.ui.auth.signup
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.SharedPreferences
+import com.apollographql.apollo.ApolloClient
 import com.flycode.musclemax_app.data.network.TempService
-import com.flycode.musclemax_app.data.network.UserService
-import com.flycode.timespace.di.scope.PerFragment
+import com.flycode.timespace.di.scope.PerFragmentLevel1
 import dagger.Module
 import dagger.Provides
 
 @Module
 class SignUpModule {
     @Provides
-    @PerFragment
+    @PerFragmentLevel1
     fun providePresenter(
-            userService: UserService,
-            tempService: TempService
+            apolloClient: ApolloClient,
+            tempService: TempService,
+            sharedPreferences: SharedPreferences
     ): SignUpPresenter
         = SignUpPresenter(
-            userService = userService,
-            tempService = tempService
+             apolloClient = apolloClient,
+            tempService = tempService,
+            sharedPreferences = sharedPreferences
         )
 
     @Provides
-    @PerFragment
+    @PerFragmentLevel1
     fun provideViewModel(
             signUpFragment: SignUpFragment,
             signUpPresenter: SignUpPresenter
@@ -31,4 +34,10 @@ class SignUpModule {
         viewModel.presenter = signUpPresenter
         return viewModel
     }
+
+    @Provides
+    @PerFragmentLevel1
+    fun provideViewPagerAdapter(
+           signUpFragment: SignUpFragment
+    ) : ViewPagerAdapter = ViewPagerAdapter(signUpFragment.fragmentManager!!)
 }

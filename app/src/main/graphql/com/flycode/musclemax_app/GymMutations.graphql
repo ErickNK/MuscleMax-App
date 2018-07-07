@@ -1,0 +1,11 @@
+mutation ReviewGym($review: Review_Input!){
+    review(
+        method: ADD,
+        review: $review
+    ){
+        id
+        content
+        reviewable_id
+        reviewable_type
+    }
+}

@@ -7,5 +7,31 @@
             android:id="@id/MapFragment"
             android:title="@string/map_navigation_item"
             android:icon="@drawable/ic_location_black" />
+
+        <item
+            android:id="@id/CoachOverviewFragment"
+            android:title="@string/coach_navigation_item"
+            android:icon="@drawable/ic_coach" />
+
+    </group>
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="single">
+        <item
+            android:id="@id/UserProfileFragment"
+            android:title="@string/user_profile_navigation_item"
+            android:icon="@drawable/ic_person_black_24dp" />
+        <item
+            android:id="@id/TagsFragment"
+            android:title="@string/tags_navigation_item"
+            android:icon="@drawable/ic_tags" />
+        <item
+            android:id="@+id/settings_menu_item"
+            android:title="@string/settings_navigation_item"
+            android:icon="@drawable/ic_settings_white_24dp"/>
+        <item
+            android:id="@+id/logout_menu_item"
+            android:title="@string/logout_navigation_item"
+            android:icon="@drawable/ic_logout"/>
     </group>
 </menu>

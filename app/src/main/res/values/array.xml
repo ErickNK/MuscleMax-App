@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="weight_data_filter">
+        <item>day</item>
+        <item>Month</item>
+    </string-array>
+
+    <string-array name="weight_units">
+        <item>kg(s)</item>
+        <item>lb(s)</item>
+        <item>st</item>
+    </string-array>
+
+    <integer-array name="weight_units_limits">
+        <item>300</item>
+        <item>661</item>
+        <item>42</item>
+    </integer-array>
+
+    <string-array name="height_units">
+        <item>cm(s)</item>
+        <item>ft</item>
+        <item>in(s)</item>
+    </string-array>
+
+    <integer-array name="height_units_limits">
+        <item>250</item>
+        <item>9</item>
+        <item>98</item>
+    </integer-array>
+
     <string-array name="uploadImage">
         <item>Pick from gallery</item>
         <item>Take a photo</item>
@@ -10,5 +39,15 @@
         <item>gallery_image</item>
         <item>photo_image</item>
         <item>remove_image</item>
+    </string-array>
+    <string-array name="tag_colors" >
+        <item>#ffbf00</item>
+        <item>#bfff00</item>
+        <item>#40ff00</item>
+        <item>#00ffbf</item>
+        <item>#0040ff</item>
+        <item>#8000ff</item>
+        <item>#ff00bf</item>
+        <item>#ff0000</item>
     </string-array>
 </resources>

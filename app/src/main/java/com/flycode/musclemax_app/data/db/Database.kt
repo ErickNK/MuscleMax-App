@@ -6,6 +6,6 @@ package com.flycode.musclemax_app.data.db
         foreignKeyConstraintsEnforced = true
 )
 object Database {
-    const val NAME = "MucleMax"
-    const val VERSION = 2
+    const val NAME = "MuscleMax"
+    const val VERSION = 3
 }

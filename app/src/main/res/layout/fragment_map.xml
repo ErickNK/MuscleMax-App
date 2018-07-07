@@ -1,15 +1,313 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.main.map.MapFragment">
-
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data class="MapFragmentBinding">
+        <import type="android.view.View"/>
+        <import type="com.github.reline.GoogleMapsBottomSheetBehavior"/>
+        <variable
+            name="viewModel"
+            type="com.flycode.musclemax_app.ui.main.map.MapViewModel"/>
+    </data>
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/main_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.exercise.exerciseEntry.ExerciseEntryActivity" />
+        android:fitsSystemWindows="true"
+        tools:context="com.mahc.custombottomsheet.MainActivity">
 
-</FrameLayout>
+        <!--APP BAR-->
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbarlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme">
+
+            <include
+                layout="@layout/custom_search_toolbar"
+                android:id="@+id/toolbar"/>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <!--MAP-->
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/map_coordinator_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorBgDarkGray">
+
+            <!--MAP-->
+            <fragment
+                android:id="@+id/main_map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <!--GYM IMAGES VIEW PAGER-->
+            <android.support.v4.view.ViewPager
+                android:id="@+id/parallax_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:background="@color/colorAccent"/>
+
+            <Button
+                android:id="@+id/btn_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="@dimen/fab_margin"
+                android:textColor="@color/white"
+                android:text="@{viewModel.uiState.nearbyDistanceText}"
+                android:background="@drawable/primary_btn"/>
+
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/bottomsheet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="0dp"
+                android:elevation="16dp"
+                app:behavior_hideable="true"
+                app:behavior_peekHeight="80dp"
+                app:behavior_anchorHeight="auto"
+                app:layout_behavior="com.github.reline.GoogleMapsBottomSheetBehavior">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <FrameLayout
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:id="@+id/bottom_sheet_details"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:padding="10dp"
+                            android:orientation="horizontal"
+                            android:background="@{viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_EXPANDED || viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_ANCHORED || viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_DRAGGING ? @color/colorPrimary : @color/colorWhite}"
+                            android:visibility="visible">
+
+                            <com.github.siyamed.shapeimageview.CircularImageView
+                                android:id="@+id/im_picture"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:layout_marginEnd="15dp"
+                                android:layout_gravity="start|center_vertical"
+                                android:contentDescription="@string/gym"
+                                android:src="@drawable/image_placeholder"/>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tv_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="NorthSide Gym"
+                                    android:textColor="@{viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_EXPANDED || viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_ANCHORED || viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_DRAGGING ? @color/colorWhite : @color/colorBlack}"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:ellipsize="end"
+                                    android:maxLines="1" />
+
+                                <TextView
+                                    android:id="@+id/tv_location"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/some_location"
+                                    android:textColor="@{viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_EXPANDED || viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_ANCHORED || viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_DRAGGING ? @color/colorWhite : @color/colorDarkGray}"
+                                    android:textSize="12sp"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"/>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/rating_average"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="2.0"
+                                        android:textColor="@{(viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_EXPANDED) || (viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_ANCHORED) || viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_DRAGGING ? @color/colorWhite : @color/colorDarkGray}"
+                                        android:layout_marginEnd="5dp"/>
+
+                                    <RatingBar
+                                        android:id="@+id/ratingBar"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:numStars="5"
+                                        android:stepSize="1.0"
+                                        android:rating="2.0"
+                                        android:isIndicator="true"
+                                        android:secondaryProgressTint="@color/colorGold"
+                                        style="@style/Widget.AppCompat.RatingBar.Small"/>
+
+                                    <TextView
+                                        android:id="@+id/rating_users_count"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="15dp"
+                                        android:text="140"
+                                        android:textColor="@{viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_EXPANDED || viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_ANCHORED || viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_DRAGGING ? @color/colorWhite : @color/colorDarkGray}"
+                                        android:layout_marginEnd="5dp"/>
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:src="@{viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_EXPANDED || viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_ANCHORED || viewModel.uiState.bottomSheetState == GoogleMapsBottomSheetBehavior.STATE_DRAGGING ? @drawable/ic_person_white_24dp : @drawable/ic_person_dark_gray_24dp}"
+                                        android:contentDescription="@string/person"/>
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/bottom_sheet_taunt"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="20dp"
+                                android:layout_gravity="center|end"
+                                android:contentDescription="@string/more_details"
+                                android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
+                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:elevation="3dp"
+                                app:civ_fill_color="@color/colorPrimary"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/bottom_sheet_toolbar"
+                            android:layout_width="match_parent"
+                            android:layout_height="?attr/actionBarSize"
+                            android:padding="10dp"
+                            android:orientation="horizontal"
+                            android:background="@color/colorPrimary"
+                            android:visibility="gone">
+
+                            <ImageButton
+                                android:id="@+id/bottom_sheet_toolbar_back_btn"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="10dp"
+                                android:src="@drawable/ic_arrow_back_white_24dp"
+                                android:background="@color/colorTransparent"
+                                android:contentDescription="@string/back"
+                                android:layout_gravity="start|center_vertical"/>
+
+                            <TextView
+                                android:id="@+id/tv_toolbar_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start|center_vertical"
+                                android:text="Nairobi West Gym"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="20sp"/>
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <include
+                        android:id="@+id/maps_bottom_sheet_content"
+                        layout="@layout/maps_bottom_sheet_content"/>
+                </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
+
+            <!--android:visibility="@{viewModel.uiState.isMapLoading? View.VISIBLE : View.GONE}"-->
+            <FrameLayout
+                android:id="@+id/map_loading_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorTranslucentWhite"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:visibility="@{viewModel.uiState.isMapLoading? View.VISIBLE : View.GONE}">
+                <ProgressBar
+                    android:id="@+id/map_progress_bar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
+
+            <!--android:visibility="@{viewModel.uiState.onMapError? View.VISIBLE : View.GONE}"-->
+            <FrameLayout
+                android:id="@+id/map_reload_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorTranslucentWhite"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:visibility="@{viewModel.uiState.onMapError? View.VISIBLE : View.GONE}">
+                <ImageButton
+                    android:id="@+id/map_reload_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_refresh_white_24dp"
+                    android:background="@drawable/circle_btn_primary"
+                    android:elevation="3dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/retry" />
+            </FrameLayout>
+        </android.support.design.widget.CoordinatorLayout>
+
+        <!--android:visibility="@{viewModel.uiState.isSearchOpen? View.VISIBLE : View.GONE}"-->
+        <!--SEARCH RESULTS-->
+        <!--TODO: change to frame layout-->
+        <LinearLayout
+            android:id="@+id/search_results"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorBgDarkGray"
+            android:orientation="vertical"
+            android:visibility="@{viewModel.uiState.isSearchOpen? View.VISIBLE : View.GONE}"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <FrameLayout
+                android:id="@+id/search_loading_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorWhite"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:visibility="@{viewModel.uiState.isSearchLoading? View.VISIBLE : View.GONE}">
+                <ProgressBar
+                    android:id="@+id/results_progress_bar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/search_reload_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorTranslucentWhite"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:visibility="@{viewModel.uiState.onSearchError? View.VISIBLE : View.GONE}">
+                <ImageButton
+                    android:id="@+id/search_reload_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_refresh_white_24dp"
+                    android:background="@drawable/circle_btn_primary"
+                    android:elevation="3dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/retry" />
+            </FrameLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/search_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/colorBgDarkGray"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        </LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

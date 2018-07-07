@@ -1,0 +1,89 @@
+query SearchNearbyGyms($raw: String){
+    searchGymLocation(raw: $raw){
+        took
+        totalHits
+        maxScore
+        hits{
+            id
+            name
+            helpline
+            pictures{
+                remote_location
+            }
+            location{
+                id
+                address
+                latLng
+                locatable_id
+                locatable_type
+            }
+            rating
+            rating_user_count
+        }
+    }
+}
+
+query SearchGyms($raw: String){
+    gymComplexSearch(raw: $raw){
+        took
+        totalHits
+        maxScore
+        hits{
+            id
+            name
+            helpline
+            pictures{
+                remote_location
+            }
+            location{
+                id
+                address
+                latLng
+                locatable_id
+                locatable_type
+            }
+            rating
+            rating_user_count
+        }
+    }
+}
+
+
+query GetGymDetails($id: ID){
+    gym(method:GET_ONE,id: $id){
+        id
+        name
+        helpline
+        pictures{
+            remote_location
+        }
+        location{
+            id
+            address
+            latLng
+            locatable_id
+            locatable_type
+        }
+        rating
+        rating_user_count
+        reviews{
+            id
+            content
+            owner{
+                firstname
+                lastname
+                pictures{
+                    remote_location
+                }
+            }
+        }
+        tags{
+            name
+            description
+            color
+            owner{
+                id
+            }
+        }
+    }
+}

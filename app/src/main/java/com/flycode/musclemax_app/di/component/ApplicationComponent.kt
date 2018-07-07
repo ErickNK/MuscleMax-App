@@ -4,6 +4,7 @@ import android.app.Application
 import com.flycode.musclemax_app.di.module.AppModule
 import com.flycode.musclemax_app.di.module.BindingsModule
 import com.flycode.musclemax_app.di.module.DataModule
+import com.flycode.musclemax_app.di.module.GoogleModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -16,7 +17,8 @@ import javax.inject.Singleton
     (AndroidSupportInjectionModule::class),
     (BindingsModule::class),
     (AppModule::class),
-    (DataModule::class)
+    (DataModule::class),
+    (GoogleModule::class)
 ])
 interface ApplicationComponent : AndroidInjector<DaggerApplication> {
     override fun inject(instance: DaggerApplication)

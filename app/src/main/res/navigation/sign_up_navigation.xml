@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/PersonalDetailsFragment">
+
+    <fragment
+        android:id="@+id/PersonalDetailsFragment"
+        android:name="com.flycode.musclemax_app.ui.auth.signup.PersonalDetails.PersonalDetailsFragment"
+        android:label="personalDetailsFragment"
+        tools:layout="@layout/fragment_personal_details" />
+    <fragment
+        android:id="@+id/LocationDetailsFragment"
+        android:name="com.flycode.musclemax_app.ui.auth.signup.LocationDetails.LocationDetailsFragment"
+        android:label="LocationDetailsFragment"
+        tools:layout="@layout/fragment_location_details" />
+    <fragment
+        android:id="@+id/WeightDetailsFragment"
+        android:name="com.flycode.musclemax_app.ui.auth.signup.WeightDetails.WeightDetailsFragment"
+        android:label="WeightDetailsFragment"
+        tools:layout="@layout/fragment_weight_details" />
+    <fragment
+        android:id="@+id/HeightDetailsFragment"
+        android:name="com.flycode.musclemax_app.ui.auth.signup.HeightDetails.HeightDetailsFragment"
+        android:label="HeightDetailsFragment"
+        tools:layout="@layout/fragment_height_details" />
+    <fragment
+        android:id="@+id/DetailsOverviewFragment"
+        android:name="com.flycode.musclemax_app.ui.auth.signup.DetailsOverview.DetailsOverviewFragment"
+        android:label="DetailsOverviewFragment"
+        tools:layout="@layout/fragment_details_overview" />
+</navigation>

@@ -2,8 +2,9 @@ package com.flycode.musclemax_app.data.models
 
 import android.databinding.BaseObservable
 import android.databinding.Bindable
+import java.io.Serializable
 
-class Credentials: BaseObservable(){
+class Credentials: BaseObservable(), Serializable {
     @get: Bindable
     var email: String = ""
         set(value) {

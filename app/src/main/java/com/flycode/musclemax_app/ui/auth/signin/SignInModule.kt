@@ -2,8 +2,11 @@ package com.flycode.musclemax_app.ui.auth.signin
 
 import android.arch.lifecycle.ViewModelProviders
 import android.content.SharedPreferences
+import com.apollographql.apollo.ApolloClient
 import com.flycode.musclemax_app.data.network.AuthService
 import com.flycode.timespace.di.scope.PerFragment
+import com.flycode.timespace.di.scope.PerFragmentLevel1
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import dagger.Module
 import dagger.Provides
 
@@ -11,18 +14,18 @@ import dagger.Provides
 class SignInModule {
 
     @Provides
-    @PerFragment
+    @PerFragmentLevel1
     fun providePresenter(
             sharedPreferences: SharedPreferences,
-            authService: AuthService
+            apolloClient: ApolloClient
     ): SignInPresenter
         = SignInPresenter(
-            authService = authService,
+            apolloClient = apolloClient,
             sharedPreferences = sharedPreferences
         )
 
     @Provides
-    @PerFragment
+    @PerFragmentLevel1
     fun provideViewModel(
             signInFragment: SignInFragment,
             signInPresenter: SignInPresenter

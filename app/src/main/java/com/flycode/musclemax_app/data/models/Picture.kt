@@ -7,9 +7,10 @@ import com.google.gson.annotations.SerializedName
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
+import java.io.Serializable
 
 @Table(database = (Database::class), name = "pictures" )
-class Picture: BaseObservable(){
+class Picture: BaseObservable(), Serializable {
     @field: [PrimaryKey Column(name = "id") SerializedName("id")]
     var id : Int = 0
 

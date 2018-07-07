@@ -1,6 +1,7 @@
 package com.flycode.musclemax_app.data.models
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class LoginPayload(
     @field: SerializedName("token")
@@ -8,4 +9,4 @@ data class LoginPayload(
 
     @field: SerializedName("user")
     var user : User
-)
+): Serializable

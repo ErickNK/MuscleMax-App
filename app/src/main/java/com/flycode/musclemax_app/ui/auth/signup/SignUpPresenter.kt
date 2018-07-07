@@ -1,183 +1,243 @@
 package com.flycode.musclemax_app.ui.auth.signup
 
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.content.SharedPreferences
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.ApolloMutationCall
+import com.apollographql.apollo.rx2.Rx2Apollo
+import com.flycode.musclemax_app.LoginMutation
+import com.flycode.musclemax_app.RegisterUserFullMutation
+import com.flycode.musclemax_app.data.models.LoginPayload
 import com.flycode.musclemax_app.data.models.Picture
 import com.flycode.musclemax_app.data.models.Response
 import com.flycode.musclemax_app.data.models.User
+import com.flycode.musclemax_app.data.models.apolloMappers.UserMapper
 import com.flycode.musclemax_app.data.network.TempService
-import com.flycode.musclemax_app.data.network.UserService
 import com.flycode.musclemax_app.ui.base.BasePresenter
+import com.flycode.musclemax_app.ui.main.MainActivity
 import com.flycode.musclemax_app.util.FileUtils
+import com.google.gson.Gson
 import com.raizlabs.android.dbflow.kotlinextensions.save
 import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
-import java.io.InputStream
-
 
 class SignUpPresenter(
-        val userService: UserService,
-        val tempService: TempService
-) : BasePresenter<SignUpFragment,SignUpPresenter,SignUpViewModel>(),
+        val tempService: TempService,
+        val apolloClient: ApolloClient,
+        val sharedPreferences: SharedPreferences
+) : BasePresenter<SignUpFragment, SignUpPresenter, SignUpViewModel>(),
         SignUpContract.SignUpPresenter<SignUpFragment>{
 
-    override var imageBitmap: Bitmap? = null
-    override var doImageSave: Boolean = false
-    private var imagePath: String? = null
-
-    override fun signUp() {
-        view?.let { view ->
+    override fun onFinish() {
+        view?.let{view ->
             view.showLoading()
-            if (doImageSave)
+            if (viewModel.doImageSave && !viewModel.signedUp) {
                 compositeDisposable.add(
-                    saveImageLocally() //SAVE PROFILE PIC LOCALLY
-                        .flatMap {
-                            //SAVE PROFILE PIC REMOTELY TEMPORALLY
-                            prepareImageUpload()
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                        }
-                        .flatMap {
-                            it.data.name = "profile_pic"
-                            it.data.description = "Profile picture of user."
-                            viewModel.user.pictures?.add(it.data)
+                        saveImageLocally() //SAVE PROFILE PIC LOCALLY
+                                .flatMap {
+                                    //SAVE PROFILE PIC REMOTELY TEMPORALLY
+                                    prepareImageUpload()
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                }
+                                .flatMap {
+                                    it.data.apply {
+                                        this.name = "profile_pic"
+                                        this.description = "Profile picture of user."
+                                        viewModel.user.pictures.clear()
+                                        viewModel.user.pictures.add(this)
+                                    }
 
-                            //SAVE THE USER TOGETHER WITH PICTURES REMOTELY
-                            userService.addWithPictures(model = "user",user = viewModel.user)
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                        }
-                        .flatMap {
-                            saveUserLocally(it.data) //SAVE THE USER TOGETHER WITH PICTURES LOCALLY
-                        }
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe ({
-                            view.hideLoading()
-                            if (it == true) view.showMessage("Successfully Registered")
-                            else view.showError("Sorry, something went wrong. Please try again.")
-                        },{
-                            view.hideLoading()
-                            view.showError(it.message!!)
-                        })
+                                    //SAVE THE USER TOGETHER WITH EVERYTHING REMOTELY
+                                    Rx2Apollo.from(registerUserFull())
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                }
+                                .flatMap {
+                                    if (it.data()?.user() == null){
+                                        Observable.error(Throwable(it.errors()[0].message()))
+                                    }else{
+                                        val user : User = Gson().fromJson(Gson().toJson(it.data()?.user()),User::class.java)
+                                        user.pictures[0].local_location = viewModel.imagePath!!
+                                        user.password = viewModel.user.password
+                                        saveUserLocally(user) //SAVE THE USER TOGETHER WITH PICTURES LOCALLY
+                                    }
+                                }
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe ({
+                                    if (it == true) {
+                                        viewModel.signedUp = true
+                                        login() //After signing up. Login user
+                                    } else {
+                                        view.showError("Sorry, something went wrong. Please try again.")
+                                    }
+                                },{
+                                    view.hideLoading()
+                                    viewModel.signedUp = false
+                                    if (it.message != null){
+                                        view.showError(message = it.message.toString())
+                                    }else{
+                                        view.showError("Something went wrong. Please try again.")
+                                    }
+                                })
                 )
-            else
+            } else if(viewModel.signedUp){
+                login() //IF ALL READY SIGNED UP. JUST SIGN IN
+            }  else {
                 compositeDisposable.add(
-                    userService.add("user",viewModel.user)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .flatMap {
-                                saveUserLocally(it.data) //SAVE THE USER TOGETHER WITH PICTURES LOCALLY
-                            }
-                            .subscribe ({
-                                view.hideLoading()
-                                if (it == true) view.showMessage("Successfully Registered")
-                                else view.showError("Sorry, something went wrong. Please try again.")
-                            },{
-                                view.hideLoading()
-                                view.showError(it.message!!)
-                            })
+                        Rx2Apollo.from(registerUserFull())
+                                .flatMap {
+                                    if (it.data()?.user() == null){
+                                        Observable.error(Throwable(it.errors()[0].message()))
+                                    }else{
+                                        val user : User = Gson().fromJson(Gson().toJson(it.data()?.user()),User::class.java)
+                                        user.password = viewModel.user.password
+                                        saveUserLocally(user) //SAVE THE USER TOGETHER WITH PICTURES LOCALLY
+                                    }
+                                }
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe ({
+                                    if (it == true) {
+                                        viewModel.signedUp = true
+                                        login()
+                                    }
+                                    else {
+                                        view.showError("Sorry, something went wrong. Please try again.")
+                                    }
+                                },{
+                                    view.hideLoading()
+                                    viewModel.signedUp = false
+                                    if (it.message != null){
+                                        view.showError(message = it.message.toString())
+                                    }else{
+                                        view.showError("Something went wrong. Please try again.")
+                                    }
+                                })
                 )
+            }
         }
     }
 
-    fun onClearImageBitmap(){
-        imageBitmap = null
+    private fun registerUserFull(): ApolloMutationCall<RegisterUserFullMutation.Data> {
+
+        val builder = RegisterUserFullMutation.builder()
+        //USER
+        builder.user(UserMapper.mapUserToUserInput(viewModel.user))
+        builder.password(viewModel.user.password)
+
+        //Initial weight measurement can be updated afterwards
+        builder.weight_measurement(UserMapper.mapWeightMeasurementToWeightMeasurementInput(viewModel.weightMeasurement))
+
+        //Pictures
+        if (viewModel.doImageSave){
+            builder.pictures(viewModel.user.pictures.map {
+                UserMapper.mapPictureToPictureInput(picture = it)
+            })
+        }
+
+        //Location
+        if (viewModel.doSaveLocation){
+            builder.location(UserMapper.mapLocationToLocationInput(viewModel.location))
+        }
+
+        return apolloClient.mutate(builder.build())
     }
 
     private fun prepareImageUpload(): Observable<Response<Picture>>{
-        val file = File(imagePath)
-        val reqFile = RequestBody.create(MediaType.parse("image/jpeg"), FileUtils.readFileToBytes(imagePath!!))
+        val file = File(viewModel.imagePath!!)
+        val reqFile = RequestBody.create(MediaType.parse("image/jpeg"), FileUtils.readFileToBytes(viewModel.imagePath!!))
         val image = MultipartBody.Part.createFormData("tempImage", file.name, reqFile)
 
         return tempService.tempSaveImage(image)
     }
 
     private fun saveImageLocally() : Observable<String>{
-        return Observable.create({ emitter ->
-                //SAVE NEW IMAGE
-                imageBitmap?.let {
-                    FileUtils.saveImage(view?.context!!,it, "/user_photos","profile_pic.jpg")
-                }.apply {
-                    if (this != null){
-                        imagePath = this
-                        emitter.onNext(this)
-                        emitter.onComplete()
-                    }
-                    else emitter.onError(Throwable("Saving Image failed. Please try again."))
+        return Observable.create { emitter ->
+            //SAVE NEW IMAGE
+            viewModel.imageBitmap?.let {
+                FileUtils.saveImage(view?.context!!,it, "/user_photos","profile_pic.jpg")
+            }.apply {
+                if (this != null){
+                    viewModel.imagePath = this
+                    emitter.onNext(this)
+                    emitter.onComplete()
                 }
-        })
+                else emitter.onError(Throwable("Saving Image failed. Please try again."))
+            }
+            emitter.onComplete()
+        }
     }
 
     private fun saveUserLocally(user: User) : Observable<Boolean>{
-        user.pictures?.find {
-            it.name == "profile_pic"
-        }.let {
-            it?.local_location = imagePath!!
-        }
         return Observable.just(user.save())
     }
 
-    override fun onCaptureImageResult(data: Intent) {
-        view?.let { view ->
-            view.showProgressBar()
-            compositeDisposable.add(
-                    Observable.create(ObservableOnSubscribe<String> { emitter ->
-                        imageBitmap = data.extras.get("data") as Bitmap
-                        view.setPhotoProgress(100)
-                        emitter.onComplete()
-                    })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
+    private fun loginUser(): ApolloMutationCall<LoginMutation.Data> {
+        return apolloClient.mutate(
+                LoginMutation.builder()
+                        .email(viewModel.user.email)
+                        .password(viewModel.user.password)
+                        .build()
+        )
+    }
 
-                    },{ throwable ->
-                        view.showError(throwable.message!!)
-                    },{
-                        view.setImageBitmap(imageBitmap!!)
-                        doImageSave = true
-                        view.hideProgressBar()
-                    })
+    private fun login(){
+        view?.let { view ->
+            compositeDisposable.add(
+                    Rx2Apollo.from(loginUser())
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe ({
+                                it?.data()?.let {it1 ->
+                                    val loginPayload : LoginPayload = Gson()
+                                            .fromJson(
+                                                    Gson().toJson(it1.login()!!)
+                                                    , LoginPayload::class.java
+                                            )
+                                    autoRegister(loginPayload)
+                                }
+                            },{
+                                view.hideLoading()
+                                if (it.message != null){
+                                    view.showError(message = it.message.toString())
+                                }else{
+                                    view.showError("Something went wrong. Please try again.")
+                                }
+                            })
             )
         }
     }
 
-    override fun onPickerImageResult(data: Intent) {
-        view?.let { view ->
-            view.showProgressBar()
-            compositeDisposable.add(
-                    Observable.create(ObservableOnSubscribe<String> { emitter ->
-                        val imageUri = data.data
-                        view.setPhotoProgress(30)
-
-                        val imageStream: InputStream = view.getContentResolver().openInputStream(imageUri)!!
-
-                        view.setPhotoProgress(50)
-
-                        imageBitmap = BitmapFactory.decodeStream(imageStream)
-
-                        view.setPhotoProgress(100)
-                        emitter.onComplete()
-                    })
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({
-
-                            },{
-                                throwable -> view.showError(throwable.message!!)
-                            },{
-                                view.setImageBitmap(imageBitmap!!)
-                                doImageSave = true
-                                view.hideProgressBar()
-                            })
-            )
+    private fun autoRegister(loginPayload: LoginPayload){
+        Observable.create<Boolean> {
+            sharedPreferences.edit().putString("token",loginPayload.token).apply()
+            loginPayload.user._tag = "default_user"
+            if (loginPayload.user.save()){
+                it.onNext(true)
+            }else it.onError(Throwable("Something Went Wrong"))
         }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    view?.hideLoading()
+                    view?.showMessage("All Done!")
+
+                    //Deep link to orient user
+                    view?.navigateToActivity(view?.context, MainActivity::class.java)
+
+                },{
+                    view?.hideLoading()
+                    if (it.message != null){
+                        view?.showError(message = it.message.toString())
+                    }else{
+                        view?.showError("Something went wrong. Please try again.")
+                    }
+                })
     }
 }

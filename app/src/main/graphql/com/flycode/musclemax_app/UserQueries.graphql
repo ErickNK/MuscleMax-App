@@ -1,0 +1,84 @@
+query GetUserTags{
+    user(method: GET_ONE,id: 1,type: "normal"){
+        owned_tags{
+            id
+            name
+            description
+            color
+        }
+    }
+}
+
+query GetCoaches{
+    user(method: GET_ALL,type: "coach"){
+        id
+        firstname
+        lastname
+        gender
+        age
+        email
+        tel
+        created_at
+        pictures{
+            remote_location
+        }
+        rating
+        rating_user_count
+        reviews{
+            id
+            content
+            owner{
+                firstname
+                lastname
+                pictures{
+                    remote_location
+                }
+            }
+        }
+        tags{
+            name
+            description
+            color
+            owner{
+                id
+            }
+        }
+    }
+}
+
+query GetUserDetails($id: ID,$type: String){
+    user(method: GET_ALL,id: $id,type: $type){
+        id
+        firstname
+        lastname
+        gender
+        age
+        email
+        tel
+        created_at
+        pictures{
+            remote_location
+        }
+        rating
+        rating_user_count
+        reviews{
+            id
+            content
+            owner{
+                firstname
+                lastname
+                pictures{
+                    remote_location
+                }
+            }
+        }
+        tags{
+            name
+            description
+            color
+            owner{
+                id
+            }
+        }
+    }
+}

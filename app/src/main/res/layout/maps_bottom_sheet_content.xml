@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fragment xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/gym_view"
+    android:name="com.flycode.musclemax_app.ui.main.gym.gymView.GymViewFragment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:layout="@layout/fragment_gym_view" />
