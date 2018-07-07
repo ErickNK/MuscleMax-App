@@ -128,7 +128,7 @@ open class DataModule{
             httpLoggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
-                .cache(cache)
+//                .cache(cache)
                 .addInterceptor(authenticationInterceptor)
                 .addInterceptor(networkInterceptor)
                 .addInterceptor(httpLoggingInterceptor)
@@ -217,7 +217,7 @@ open class DataModule{
             ApolloClient.builder()
                     .serverUrl(Config.GRAPHQL_ENDPOINT)
                     .addCustomTypeAdapter(CustomType.DATETIME,DateTimeAdapter())
-                    .normalizedCache(normalizedCacheFactory, cacheKeyResolver)
+//                    .normalizedCache(normalizedCacheFactory, cacheKeyResolver)
                     .okHttpClient(okHttpClient)
                     .build()
 

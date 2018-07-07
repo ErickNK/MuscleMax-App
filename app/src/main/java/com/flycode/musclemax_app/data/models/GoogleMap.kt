@@ -2,11 +2,11 @@ package com.flycode.musclemax_app.data.models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
+import java.util.*
 
-import java.util.ArrayList
 
-
-class GoogleMap {
+class GoogleMap:Serializable {
 
     inner class Duration {
         @SerializedName("text")

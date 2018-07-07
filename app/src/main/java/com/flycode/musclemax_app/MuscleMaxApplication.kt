@@ -1,5 +1,7 @@
 package com.flycode.musclemax_app
 
+import com.facebook.FacebookSdk
+import com.facebook.appevents.AppEventsLogger
 import com.facebook.stetho.Stetho
 import com.flycode.musclemax_app.di.component.ApplicationComponent
 import com.flycode.musclemax_app.di.component.DaggerApplicationComponent
@@ -13,6 +15,8 @@ class MuscleMaxApplication: DaggerApplication() {
         //Initialize
         FlowManager.init(this)
         Stetho.initializeWithDefaults(this)
+        FacebookSdk.sdkInitialize(applicationContext)
+        AppEventsLogger.activateApp(this)
     }
 
     override fun applicationInjector() : AndroidInjector<DaggerApplication>? {

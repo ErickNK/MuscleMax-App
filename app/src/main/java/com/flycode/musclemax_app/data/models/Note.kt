@@ -8,10 +8,10 @@ import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.ForeignKey
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
-import com.raizlabs.android.dbflow.structure.BaseModel
+import java.io.Serializable
 
 @Table(database = Database::class, name = "notes")
-class Note : BaseObservable() {
+class Note : BaseObservable(), Serializable {
     @field: [PrimaryKey Column(name = "id") SerializedName("id")]
     var id : Int = 0
 

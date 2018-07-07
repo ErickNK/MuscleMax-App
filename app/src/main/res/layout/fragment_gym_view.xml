@@ -262,11 +262,32 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:defaultToWindow="false"/>
-                        <include
-                            layout="@layout/no_reviews_layout"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
-                            android:visibility="@{viewModel.uiState.isEmptyReviewsHidden? View.GONE : View.VISIBLE}"/>
+                            android:background="@color/white"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="@{viewModel.uiState.isEmptyReviewsHidden? View.GONE : View.VISIBLE}">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/no_reviews_yet"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/colorDarkGray"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/click_the_button_to_add_your_own"
+                                android:textSize="15sp"
+                                android:textColor="@color/colorDarkGray"/>
+
+                        </LinearLayout>
                     </FrameLayout>
 
                     <com.rd.PageIndicatorView
@@ -341,9 +362,32 @@
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
                             android:background="@color/colorLtGray"/>
-                        <include
-                            layout="@layout/no_tags_layout"
-                            android:visibility="@{viewModel.uiState.isEmptyTagsHidden? View.GONE : View.VISIBLE}"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/white"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="@{viewModel.uiState.isEmptyTagsHidden? View.GONE : View.VISIBLE}">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/no_tags_yet"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/colorDarkGray"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/click_the_button_to_add_your_own"
+                                android:textSize="15sp"
+                                android:textColor="@color/colorDarkGray"/>
+
+                        </LinearLayout>
                     </FrameLayout>
 
                 </LinearLayout>

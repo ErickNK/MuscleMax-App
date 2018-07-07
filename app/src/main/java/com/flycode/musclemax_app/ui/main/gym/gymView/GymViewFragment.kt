@@ -113,7 +113,7 @@ class GymViewFragment : BaseFragment<GymViewFragment, GymViewPresenter, GymViewV
                 .onPositive { _, _ ->
                     //Review Gym
                     presenter.addReview(customReviewEntryBinding.review!!)
-
+                    customReviewEntryDialog.hide()
                     //Check if update
                 }
                 .build()
@@ -144,6 +144,7 @@ class GymViewFragment : BaseFragment<GymViewFragment, GymViewPresenter, GymViewV
         tagPickerGymTagsAdapter.onTagClickedListener = object : GymTagsAdapter.OnTagClickedListener {
             override fun onTagClicked(tag: Tag) {
                 presenter.tagGym(tag)
+                customTagPickerDialog.hide()
             }
         }
         customTagPickerBinding.chipsRecyclerView.adapter = tagPickerGymTagsAdapter
@@ -242,8 +243,21 @@ class GymViewFragment : BaseFragment<GymViewFragment, GymViewPresenter, GymViewV
     }
 
     fun onGymClicked(gym: Gym) {
-        viewModel.gym = gym
+        mapGym(gym)
         presenter.init()
+    }
+
+    fun mapGym(gym: Gym){
+        viewModel.gym.id = gym.id
+        viewModel.gym.name = gym.name
+        viewModel.gym.helpline = gym.helpline
+        viewModel.gym.location = gym.location
+        viewModel.gym.email = gym.email
+        viewModel.gym.pictures = gym.pictures
+        viewModel.gym.rating = gym.rating
+        viewModel.gym.rating_user_count = gym.rating_user_count
+        viewModel.gym.tags = gym.tags
+        viewModel.gym.reviews = gym.reviews
     }
 
     companion object {

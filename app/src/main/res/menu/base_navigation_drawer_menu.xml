@@ -13,11 +13,6 @@
             android:title="@string/coach_navigation_item"
             android:icon="@drawable/ic_coach" />
 
-        <item
-            android:id="@id/GymsOverviewFragment"
-            android:title="@string/gym_navigation_item"
-            android:icon="@drawable/ic_gym_black" />
-
     </group>
     <group
         android:id="@+id/menu_bottom"

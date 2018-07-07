@@ -9,7 +9,6 @@ import com.flycode.musclemax_app.ui.flexibleItems.SearchResultsHeaderItem
 class MapViewModel
     : BaseViewModel<MapFragment, MapPresenter>() {
     var gyms: MutableList<Gym> = ArrayList()
-    var nearbyDistance: Int = 200
     var lastTextEdit: Long = 0
 
     val uiState = UiState()
@@ -19,6 +18,17 @@ class MapViewModel
 
 
     class UiState : BaseObservable(){
+        @get: Bindable
+        var nearbyDistance: Double = 20.0
+            set(value) {
+                field = value
+                notifyChange()
+            }
+
+        fun getNearbyDistanceText():String{
+            return "$nearbyDistance km(s)"
+        }
+
         @get: Bindable
         var isBottomSheetPicLoading: Boolean = false
             set(value) {

@@ -128,6 +128,7 @@ class CoachViewFragment
                 .onPositive { _, _ ->
                     //Review Coach
                     presenter.addReview(customReviewEntryBinding.review!!)
+                    customReviewEntryDialog.hide()
 
                     //Check if update
                 }
@@ -159,6 +160,7 @@ class CoachViewFragment
         tagPickerCoachTagsAdapter.onTagClickedListener = object : CoachTagsAdapter.OnTagClickedListener {
             override fun onTagClicked(tag: Tag) {
                 presenter.tagCoach(tag)
+                customTagPickerDialog.hide()
             }
         }
         customTagPickerBinding.chipsRecyclerView.adapter = tagPickerCoachTagsAdapter

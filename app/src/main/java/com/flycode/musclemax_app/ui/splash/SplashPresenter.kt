@@ -46,7 +46,7 @@ class SplashPresenter(
      *
      */
     private fun isUserRegistered(): Boolean {
-        return utilityWrapper.defaultUser.id > 0
+        return utilityWrapper.defaultUser.id > 0 || isSignedInWithFacebook() || isSignedInWithGoogle()
     }
 
     private fun isSignedInWithGoogle():Boolean{

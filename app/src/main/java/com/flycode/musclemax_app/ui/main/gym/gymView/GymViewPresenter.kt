@@ -198,7 +198,7 @@ class GymViewPresenter(
                     .subscribe ({
                         it.data()?.review()?.let {
                             val rev = Gson().fromJson(Gson().toJson(it),Review::class.java)
-                            gymReviewsAdapter.addReview(rev,0)
+                            gymReviewsAdapter.addReview(rev)
                         }
                         checkEmptyReviews()
                         viewModel.uiState.isLoading = false

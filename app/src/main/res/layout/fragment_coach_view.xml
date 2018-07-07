@@ -232,7 +232,6 @@
                             app:defaultToWindow="false"
                             android:visibility="@{viewModel.uiState.isEmptyReviewsHidden? View.VISIBLE : View.GONE}"/>
                         <LinearLayout
-                            xmlns:android="http://schemas.android.com/apk/res/android"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
                             android:background="@color/white"
@@ -334,7 +333,6 @@
                             android:background="@color/colorLtGray"
                             android:visibility="@{viewModel.uiState.isEmptyTagsHidden? View.VISIBLE : View.GONE}"/>
                         <LinearLayout
-                            xmlns:android="http://schemas.android.com/apk/res/android"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@color/white"

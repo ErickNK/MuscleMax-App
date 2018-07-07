@@ -188,7 +188,7 @@ class CoachViewPresenter(
                             .subscribe ({
                                 it.data()?.review()?.let {
                                     val rev = Gson().fromJson(Gson().toJson(it), Review::class.java)
-                                    coachReviewsAdapter.addReview(rev,0)
+                                    coachReviewsAdapter.addReview(rev)
                                 }
                                 checkEmptyReviews()
                                 viewModel.uiState.isLoading = false

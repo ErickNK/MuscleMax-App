@@ -6,7 +6,9 @@ import com.flycode.musclemax_app.R
 import com.flycode.musclemax_app.data.models.Gym
 import com.google.android.gms.maps.GoogleMap
 import nz.co.trademe.mapme.LatLng
-import nz.co.trademe.mapme.annotations.*
+import nz.co.trademe.mapme.annotations.AnnotationFactory
+import nz.co.trademe.mapme.annotations.MapAnnotation
+import nz.co.trademe.mapme.annotations.MarkerAnnotation
 import nz.co.trademe.mapme.googlemaps.GoogleMapMeAdapter
 
 class MapsAdapter(
@@ -28,10 +30,17 @@ class MapsAdapter(
 
     override fun onCreateAnnotation(factory: AnnotationFactory<GoogleMap>, position: Int, annotationType: Int): MapAnnotation {
         val item = this.markers[position]
-        val latlng  = item.location?.latLng?.split(",")!!
-        return factory.createMarker(LatLng(latlng[0].toDouble(),latlng[1].toDouble()),
-                BitmapFactory.decodeResource(context.resources,
-                        R.drawable.ic_gym_map_pin), item.name)
+        val latlng  = item.location?.latLng?.trim()?.split(",")
+
+        return if (latlng != null){
+            factory.createMarker(LatLng(latlng[0].toDouble(),latlng[1].toDouble()),
+                    BitmapFactory.decodeResource(context.resources,
+                            R.drawable.ic_gym_map_pin), item.name)
+        }else
+            factory.createMarker(LatLng(0.0,0.0),
+                    BitmapFactory.decodeResource(context.resources,
+                            R.drawable.ic_gym_map_pin), item.name)
+
     }
 
 }

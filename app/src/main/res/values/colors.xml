@@ -63,4 +63,5 @@
     <color name="google_color">#FF6161</color>
     <color name="tweeter_color">#81B1FF</color>
     <color name="text_highlight_color" >#ff3300</color>
+    <color name="translucentColorPrimary">#5a3f51b5</color>
 </resources>

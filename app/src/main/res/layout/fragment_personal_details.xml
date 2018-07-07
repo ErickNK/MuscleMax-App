@@ -97,6 +97,9 @@
                         android:layout_height="150dp"
                         android:layout_gravity="center"
                         android:src="@drawable/image_placeholder"
+                        android:scaleType="fitCenter"
+                        app:civ_border_color="@color/colorPrimary"
+                        app:civ_border_width="3dp"
                         android:contentDescription="@string/profile_pic" />
 
                     <android.support.design.widget.FloatingActionButton
@@ -271,7 +274,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginBottom="10dp"
+                    android:visibility="@{superViewModel.uiState.googleLoginSuccess || superViewModel.uiState.facebookLoginSuccess ? View.GONE : View.VISIBLE}">
 
                     <ImageView
                         android:layout_width="30dp"

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <data class="CustomReviewEntryBinding">
+    <data class="CustomDistanceEntryBinging">
         <variable
-            name="review"
-            type="com.flycode.musclemax_app.data.models.Review"/>
+            name="viewModel"
+            type="com.flycode.musclemax_app.ui.main.map.MapViewModel"/>
     </data>
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -12,25 +12,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <!--SUBTITLES-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add_a_review"
+                android:text="@string/search_distance"
+                android:layout_marginEnd="20dp"
                 android:textSize="@dimen/app_init_subheadings"
                 android:textColor="@color/colorBlack"
                 android:layout_marginBottom="10dp"
-                android:layout_gravity="start"/>
+                android:layout_gravity="center"/>
 
             <!--REVIEW INPUT-->
             <EditText
                 android:id="@+id/ed_tag_name"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="40dp"
                 android:inputType="textMultiLine"
-                android:text="@={review.content}"
+                android:text="@={viewModel.uiState.nearbyDistance}"
                 android:textSize="@dimen/app_init_text"
                 android:gravity="top|left"
                 android:textColor="@color/colorDarkGray"

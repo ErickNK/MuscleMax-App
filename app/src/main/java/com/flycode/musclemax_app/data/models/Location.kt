@@ -4,9 +4,10 @@ import com.flycode.musclemax_app.data.db.Database
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
+import java.io.Serializable
 
 @Table(database = (Database::class), name = "locations" )
-class Location {
+class Location:Serializable {
     @field: [PrimaryKey Column()]
     var id : Int = 0
 

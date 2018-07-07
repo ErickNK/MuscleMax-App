@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/CoachOverviewFragment">
+    app:startDestination="@id/MapFragment">
     <fragment
         android:id="@+id/MapFragment"
         android:name="com.flycode.musclemax_app.ui.main.map.MapFragment"

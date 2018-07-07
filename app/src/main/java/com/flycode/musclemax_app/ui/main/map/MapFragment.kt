@@ -22,12 +22,14 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
+import com.afollestad.materialdialogs.MaterialDialog
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.flycode.musclemax_app.R
 import com.flycode.musclemax_app.data.models.Gym
+import com.flycode.musclemax_app.databinding.CustomDistanceEntryBinging
 import com.flycode.musclemax_app.databinding.MapFragmentBinding
 import com.flycode.musclemax_app.ui.base.BaseFragment
 import com.flycode.musclemax_app.ui.base.BaseServiceContract
@@ -43,6 +45,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.squareup.picasso.Picasso
@@ -68,6 +71,9 @@ class MapFragment
     lateinit var behavior: GoogleMapsBottomSheetBehavior<NestedScrollView>
     @Inject lateinit var searchListAdapter: FlexibleAdapter<SearchResultsHeaderItem>
     var bottomSheetStateListener: BottomSheetStateListener? = null
+
+    lateinit var customDistanceEntryBinging: CustomDistanceEntryBinging
+    lateinit var customDistanceEntryDialog: MaterialDialog
 
     private var permissionsGranted = false
     private var input_finish_delay: Long = 1000 // 1 seconds after user stops typing
@@ -138,8 +144,12 @@ class MapFragment
             viewModel.uiState.onSearchError = false
         }
 
+        mapFragmentBinding.btnDistance.setOnClickListener{
+            customDistanceEntryDialog.show()
+        }
         setupMapsBottomSheet()
         setupSearchRecyclerView()
+        setupDistanceEntry()
     }
 
     private fun setupMapsBottomSheet(){
@@ -418,15 +428,28 @@ class MapFragment
         return true
     }
 
+    fun centerOnUser(latLng: LatLng){
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f))
+        map.addCircle(
+                CircleOptions()
+                        .center(latLng)
+                        .radius(viewModel.uiState.nearbyDistance * 1000.0)
+                        .strokeWidth(1f)
+                        .strokeColor(resources.getColor(R.color.colorPrimary))
+                        .fillColor(resources.getColor(R.color.translucentColorPrimary))
+        )
+    }
+
     fun moveCamera(latLng: LatLng, zoom: Float, mark: Boolean = false, markerTitle: String = ""){
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom))
-        if (mark)
+        if (mark) {
             map.addMarker(
                     MarkerOptions()
                             .title(markerTitle)
                             .snippet("lat:${latLng.latitude}, lng:${latLng.longitude}")
                             .position(latLng)
             )
+        }
     }
 
     private fun hideSoftKeyboard(){
@@ -440,6 +463,20 @@ class MapFragment
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    private fun setupDistanceEntry(){
+        customDistanceEntryBinging = DataBindingUtil.inflate(layoutInflater,
+                R.layout.custom_distance_entry_layout, null, false)
+        customDistanceEntryBinging.viewModel = viewModel
+
+        customDistanceEntryDialog = MaterialDialog.Builder(context!!)
+                .customView(customDistanceEntryBinging.root, true)
+                .positiveText(android.R.string.ok)
+                .negativeText(android.R.string.cancel)
+                .onPositive { _, _ ->
+                    presenter.refetchNearbyGyms()
+                }
+                .build()
+    }
 
     override fun onGymClicked(gym: Gym) {
         hideSoftKeyboard()
@@ -454,8 +491,8 @@ class MapFragment
 
         gym.location?.latLng?.split(",")?.apply {
             if(!viewModel.gyms.contains(gym))
-                moveCamera(LatLng(this[0].toDouble(),this[1].toDouble()),10f,true,gym.name)
-            else moveCamera(LatLng(this[0].toDouble(),this[1].toDouble()),10f)
+                moveCamera(LatLng(this[0].toDouble(),this[1].toDouble()),15f,true,gym.name)
+            else moveCamera(LatLng(this[0].toDouble(),this[1].toDouble()),15f)
         }
 
         if (!gym.pictures.isEmpty())
@@ -470,11 +507,7 @@ class MapFragment
                 )
         )
 
-        mapFragmentBinding.bottomsheet.visibility = View.GONE
-        behavior.state = GoogleMapsBottomSheetBehavior.STATE_HIDDEN
-        mapFragmentBinding.bottomsheet.visibility = View.VISIBLE
         behavior.state = GoogleMapsBottomSheetBehavior.STATE_COLLAPSED
-
         behavior.isHideable = false
     }
 

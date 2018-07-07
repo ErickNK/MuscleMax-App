@@ -2,20 +2,15 @@ package com.flycode.musclemax_app.data.models
 
 import android.databinding.BaseObservable
 import android.databinding.Bindable
-import android.databinding.ObservableInt
-import android.graphics.drawable.Drawable
-import android.net.Uri
-
 import com.flycode.musclemax_app.data.db.Database
 import com.google.gson.annotations.SerializedName
 import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ForeignKey
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
-import com.raizlabs.android.dbflow.structure.BaseModel
+import java.io.Serializable
 
 @Table(database = Database::class, name = "tags")
-class Tag : BaseObservable() {
+class Tag : BaseObservable(), Serializable {
     @field: [PrimaryKey Column(name = "id") SerializedName("id")]
     var id : Int = 0
 

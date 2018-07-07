@@ -54,8 +54,7 @@ class MapPresenter(
                 nearbyGymService = (service as NearbyGymService.NearbyGymServiceBinder).service
                 nearbyGymService?.listeners?.add(view!!)
                 nearbyGymService?.lastKnownLocation?.let {
-                    view?.moveCamera(it,3f)
-                    fetchNearbyGyms(it)
+                    onLocationUpdate(it)
                 }
                 isBound = true
             }
@@ -114,7 +113,7 @@ class MapPresenter(
                                 "body":{
                                     "query": {
                                         "geo_distance" : {
-                                            "distance" : "${viewModel.nearbyDistance}km",
+                                            "distance" : "${viewModel.uiState.nearbyDistance}km",
                                             "latLng" : "${latLng.latitude}, ${latLng.longitude}"
                                         }
                                     }
@@ -188,9 +187,17 @@ class MapPresenter(
         }
     }
 
+    override fun onLocationUpdate(data: Bundle){
+        onLocationUpdate(LatLng(data.getDouble("lat"),data.getDouble("lng")))
+    }
+
+    private fun onLocationUpdate(latLng: LatLng){
+        fetchNearbyGyms(latLng)
+    }
+
     fun refetchNearbyGyms(){
         nearbyGymService?.lastKnownLocation?.let {
-            fetchNearbyGyms(it)
+            onLocationUpdate(it)
         }
     }
 
@@ -209,6 +216,7 @@ class MapPresenter(
                                     )
                                     mapsAdapter.markers = viewModel.gyms
                                     mapsAdapter.notifyDataSetChanged()
+                                    view.centerOnUser(latLng)
                                     viewModel.uiState.isMapLoading = false
                                 }
                             },{
@@ -223,18 +231,4 @@ class MapPresenter(
             )
         }
     }
-
-    override fun onLocationUpdate(data: Bundle){
-        fetchNearbyGyms(LatLng(data.getDouble("lat"),data.getDouble("lng")))
-    }
-
-    fun onGymClicked(gym: Gym) {
-
-    }
-
-    fun onGymInfoWindowClicked(gym: Gym) {
-
-    }
-
-
 }

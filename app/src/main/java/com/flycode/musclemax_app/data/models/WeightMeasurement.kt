@@ -6,6 +6,7 @@ import com.flycode.musclemax_app.data.db.Database
 import com.google.gson.annotations.SerializedName
 import com.raizlabs.android.dbflow.annotation.*
 import com.raizlabs.android.dbflow.sql.language.SQLite
+import java.io.Serializable
 import java.util.*
 
 
@@ -16,7 +17,7 @@ import java.util.*
  */
 @Table(database = Database::class, name = "weight_measurement")
 @ManyToMany(referencedTable = Tag::class)
-class WeightMeasurement : BaseObservable() {
+class WeightMeasurement : BaseObservable() , Serializable{
     @field: [PrimaryKey Column(name = "id") SerializedName("id")]
     var id : Int = 0
 

@@ -123,6 +123,8 @@
     <!--FACE BOOK-->
     <string name="facebook_app_id">1726822424039436</string>
     <string name="fb_login_protocol_scheme">fb1726822424039436</string>
+
+
     <string name="facebook">FACEBOOK</string>
     <string name="google">GOOGLE</string>
     <string name="home">Home</string>
@@ -139,4 +141,5 @@
     <string name="click_the_button_to_add_your_own">Click the + button to add your own.</string>
     <string name="user_profile_navigation_item">Your Profile</string>
     <string name="action_search">Search</string>
+    <string name="search_distance">Search distance:</string>
 </resources>

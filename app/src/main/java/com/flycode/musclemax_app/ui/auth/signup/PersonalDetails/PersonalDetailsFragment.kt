@@ -75,7 +75,8 @@ class PersonalDetailsFragment
     }
 
     private fun checkPasswordRetype(): Boolean{
-        return if (tv_password_retype.text.toString() != tv_password.text.toString()){
+        return if ( (!superViewModel.uiState.facebookLoginSuccess && !superViewModel.uiState.googleLoginSuccess)
+            && tv_password_retype.text.toString() != tv_password.text.toString()){
             showError("The passwords do not match")
             false
         }else true
